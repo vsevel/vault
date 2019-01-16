@@ -1,0 +1,136 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: spring-legacy-example
+  name: spring-legacy-example 
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: spring-legacy-example
+---
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: spring-legacy-example
+spec:
+  triggers:
+    -
+      type: ConfigChange
+    -
+      type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - spring-legacy-example
+        from:
+          kind: ImageStreamTag
+          namespace: spring-legacy-example
+          name: 'spring-legacy-example:latest'
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: spring-legacy-example
+      annotations:
+        vaultproject.io/policies: default,spring-legacy-example
+        vaultproject.io/ttl: "24h"
+        pod.beta.kubernetes.io/init-containers: '[
+          {
+            "name": "vault-init",
+            "image": "raffaelespazzoli/credscontroller:0.0.1",
+            "args": ["vault-init"],
+            "imagePullPolicy": "Always",
+            "ports" : [
+              {
+                "containerPort" : 8443,
+                "name" : "init-port",
+                "protocol" : "TCP"
+               }
+            ],
+            "env": [
+              {
+                "name": "POD_NAME",
+                "valueFrom": {"fieldRef": {"fieldPath": "metadata.name", "apiVersion": "v1"}}
+              },
+              {
+                "name": "POD_IP",
+                "valueFrom": {"fieldRef": {"fieldPath": "status.podIP", "apiVersion": "v1"}}
+              },              
+              {
+                "name": "POD_NAMESPACE",
+                "valueFrom": {"fieldRef": {"fieldPath": "metadata.namespace", "apiVersion": "v1"}}
+              },
+              {
+                "name": "VAULT_CACERT",
+                "value": "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt"
+              },                                           
+              {
+                "name": "VAULT_ADDR",
+                "value": "https://vault.vault-controller.svc.cluster.local:8200"
+              },
+              {
+                "name": "VAULT_CONTROLLER_ADDR",
+                "value": "https://vault-controller.vault-controller.svc.cluster.local:8443"
+              },
+              {
+                "name": "VAULT_CONTROLLER_CACERT",
+                "value": "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt"
+              },
+              {
+                "name": "VAULT_INIT_PORT",
+                "value": "8443"
+              },
+              {
+                "name": "CREDS_FILE",
+                "value": "/var/run/secrets/vaultproject.io/secret.json"
+              },
+              {
+                "name": "RETRIEVE_SECRET",
+                "value": "secret/spring-legacy-example"
+              },                             
+              {
+                "name": "LOG_LEVEL",
+                "value": "debug"
+              }                             
+            ],
+            "volumeMounts": [
+              {
+                "name": "vault-token",
+                "mountPath": "/var/run/secrets/vaultproject.io"
+              }
+            ]
+          }
+        ]'        
+    spec:
+      containers:
+        - name: spring-legacy-example
+          image: "spring-legacy-example/spring-legacy-example:latest"
+          imagePullPolicy: Always
+          env: 
+            - name: SECRET_FILE
+              value: "/var/run/secrets/vaultproject.io/secret.json"    
+            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK
+              value: "DEBUG"                                                                  
+          volumeMounts:
+            - name: vault-token
+              mountPath: "/var/run/secrets/vaultproject.io"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 3                          
+      volumes:
+        - name: vault-token
+          emptyDir:
+            medium: Memory
