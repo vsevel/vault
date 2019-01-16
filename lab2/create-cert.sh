@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir work
 cp csr.json work
 pushd work
 
