@@ -1,6 +1,0 @@
-#!/bin/bash
-
-set -e
-
-./build
-docker build -t raffaelespazzoli/credscontroller:0.0.1 .
