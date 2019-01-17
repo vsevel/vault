@@ -34,7 +34,7 @@ cp vault.crt tls.crt
 kubectl create secret tls vault-tls --key ./tls.key --cert ./tls.crt
 
 # Display public key content
-keytool -printcert -file tls.crt
+openssl x509 -in tls.crt -text
   #Propriétaire : CN=vault.vault.svc.cluster.local
   #Emetteur : CN=kubernetes
 
