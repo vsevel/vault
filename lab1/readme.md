@@ -1,7 +1,7 @@
 # Vault lab1
 ```
 
-create-all.sh
+./create-all.sh
 
 kubectl get all
 
@@ -26,6 +26,6 @@ vault write secret/toto password=titi
 vault read secret/toto
 exit
 
-remove-all.sh
+./remove-all.sh
 
 ```

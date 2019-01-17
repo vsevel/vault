@@ -3,14 +3,14 @@
 
 kubectl config set-context $(kubectl config current-context) --namespace=vault
 
-Install ingresscontroller on docker for mac
-kubectl apply -f nginx-ingress-controller/nginx-ingress-controller.yaml
+Install ingresscontroller on docker for mac (from nginx-ingress-controller/)
+kubectl apply -f nginx-ingress-controller.yaml
 see https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/cloud-generic.yaml
-kubectl apply -f nginx-ingress-controller/cloud-generic.yaml
+kubectl apply -f cloud-generic.yaml
 
 add "127.0.0.1       myvault.mycompany.io" to /etc/hosts
 
-./create.sh
+./create-all.sh
 
 pod=$(kubectl get pods --output=jsonpath={.items..metadata.name})
 kubectl exec -it $pod -- /bin/sh
@@ -29,7 +29,7 @@ vault read secret/toto
 exit
 
 kubectl exec -it $pod -- cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt > work/ca.crt
-keytool -printcert -file work/ca.crt
+openssl x509 -in work/ca.crt -text
 curl --cacert work/ca.crt -v https://myvault.mycompany.io/v1/sys/seal-status
 
 export VAULT_CACERT=work/ca.crt
@@ -40,4 +40,5 @@ controller=$(kubectl get pods -L "app.kubernetes.io/name=ingress-nginx" -n ingre
 kubectl logs $controller -n ingress-nginx
 
 ./remove-all.sh
+
 ```
