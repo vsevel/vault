@@ -1,11 +1,11 @@
 #!/bin/bash
 
 mkdir work
-cp csr.json work
+cp vault-csr.json work
 pushd work
 
 # Create private key and CSR
-cfssl genkey csr.json | cfssljson -bare vault
+cfssl genkey vault-csr.json | cfssljson -bare vault
 
 # Create CSR k8s object
 cat <<EOF | kubectl create -f -
