@@ -8,3 +8,5 @@ kubectl delete secret --all
 kubectl delete csr --all
 kubectl delete cm --all
 kubectl delete pvc --all
+
+helm delete $(helm ls --short) --purge
