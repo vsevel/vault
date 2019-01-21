@@ -19,6 +19,13 @@ exit
 
 kubectl exec -it consul-ctj4z -- /bin/sh
 
+            -retry-join=${CONSUL_FULLNAME}-server-0.${CONSUL_FULLNAME}-server.${NAMESPACE}.svc \
+            -retry-join=${CONSUL_FULLNAME}-server-1.${CONSUL_FULLNAME}-server.${NAMESPACE}.svc \
+            -retry-join=${CONSUL_FULLNAME}-server-2.${CONSUL_FULLNAME}-server.${NAMESPACE}.svc \
+
+            add .cluster.local
+            eg. consul-server-1.consul-server.vault.svc.cluster.local 
+
 ./remove-all.sh
 
 ```
