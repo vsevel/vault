@@ -13,7 +13,7 @@ add "127.0.0.1       myvault.mycompany.io" to /etc/hosts
 ./create-all.sh
 
 pod=$(kubectl get pods --output=jsonpath={.items..metadata.name})
-kubectl exec -it $pod -- /bin/sh
+kubectl exec -it $pod sh
 export VAULT_CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 vault status -address=https://vault.vault.svc.cluster.local:8200
 vault status -address=https://vault.vault:8200
