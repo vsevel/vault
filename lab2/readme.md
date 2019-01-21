@@ -35,7 +35,7 @@ curl --cacert work/ca.crt -v https://myvault.mycompany.io/v1/sys/seal-status
 export VAULT_CACERT=work/ca.crt
 vault status -address=https://myvault.mycompany.io
 
-get the logs from the nginx ingress controller
+# get the logs from the nginx ingress controller
 controller=$(kubectl get pods -L "app.kubernetes.io/name=ingress-nginx" -n ingress-nginx --output=jsonpath={.items..metadata.name})
 kubectl logs $controller -n ingress-nginx
 

@@ -4,27 +4,22 @@
 kubectl config set-context $(kubectl config current-context) --namespace=vault
 
 git clone https://github.com/hashicorp/consul-helm.git
-cd consul-helm
+consul_helm_path=`pwd`/consul-helm/
 git checkout v0.5.0
-# see https://docs.helm.sh/using_helm/
-helm init
 
-helm install --name consul ./
-kubectl patch sts consul-server --type json -p='[{"op": "remove", "path": "/spec/template/spec/affinity"}]'
-kubectl delete pods -l 'component=server'
+./create-all.sh
+kubectl get pods --watch
 
-kubectl exec -it consul-server-0 -- /bin/sh
+kubectl exec -it consul-server-0 sh
 consul members
 exit
 
-kubectl exec -it consul-ctj4z -- /bin/sh
+kubectl exec -it $(kubectl get pod -l component=client -o custom-columns=:metadata.name) sh
+consul members
+exit
 
-            -retry-join=${CONSUL_FULLNAME}-server-0.${CONSUL_FULLNAME}-server.${NAMESPACE}.svc \
-            -retry-join=${CONSUL_FULLNAME}-server-1.${CONSUL_FULLNAME}-server.${NAMESPACE}.svc \
-            -retry-join=${CONSUL_FULLNAME}-server-2.${CONSUL_FULLNAME}-server.${NAMESPACE}.svc \
+kubectl port-forward consul-server-0 8500:8500
 
-            add .cluster.local
-            eg. consul-server-1.consul-server.vault.svc.cluster.local 
 
 ./remove-all.sh
 

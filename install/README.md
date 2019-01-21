@@ -18,6 +18,11 @@ brew install cfssl
 # vault
 brew install vault
 
+# helm
+brew install kubernetes-helm
+# see https://docs.helm.sh/using_helm/
+helm init
+
 # good to know
 docker rmi $(docker images -q)
 
