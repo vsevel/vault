@@ -1,0 +1,92 @@
+  spec:
+    template:
+      spec:
+        containers:
+        - command:
+          - /bin/sh
+          - -ec
+          - |
+            CONSUL_FULLNAME="consul"
+            
+            exec /bin/consul agent \
+              -node="${NODE}" \
+              -advertise="${POD_IP}" \
+              -bind=0.0.0.0 \
+              -client=0.0.0.0 \
+              -config-dir=/consul/config \
+              -datacenter=dc1 \
+              -data-dir=/consul/data \
+              -retry-join=${CONSUL_FULLNAME}-server-0.${CONSUL_FULLNAME}-server.${NAMESPACE}.svc.cluster.local \
+              -retry-join=${CONSUL_FULLNAME}-server-1.${CONSUL_FULLNAME}-server.${NAMESPACE}.svc.cluster.local \
+              -retry-join=${CONSUL_FULLNAME}-server-2.${CONSUL_FULLNAME}-server.${NAMESPACE}.svc.cluster.local \
+              -domain=consul
+          env:
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: NODE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: spec.nodeName
+          image: consul:1.3.1
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - consul leave
+          name: consul
+          ports:
+          - containerPort: 8500
+            hostPort: 8500
+            name: http
+            protocol: TCP
+          - containerPort: 8502
+            hostPort: 8502
+            name: grpc
+            protocol: TCP
+          - containerPort: 8301
+            name: serflan
+            protocol: TCP
+          - containerPort: 8302
+            name: serfwan
+            protocol: TCP
+          - containerPort: 8300
+            name: server
+            protocol: TCP
+          - containerPort: 8600
+            name: dns-tcp
+            protocol: TCP
+          - containerPort: 8600
+            name: dns-udp
+            protocol: UDP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -ec
+              - |
+                curl http://127.0.0.1:8500/v1/status/leader 2>/dev/null | \
+                grep -E '".+"'
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /consul/data
+            name: data
+          - mountPath: /consul/config
+            name: config
