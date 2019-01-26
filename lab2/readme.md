@@ -20,17 +20,15 @@ kubectl exec -it $pod sh
     vault status -address=https://vault:8200
 
     vault operator init -key-shares=1 -key-threshold=1
-        Unseal Key 1: I4CM5fuYdwdd85bPCCyzulXkXa3S+GjXiavt4r/CV1w=
-        Initial Root Token: s.kKECwHyEZEaaM6xoq78f05Vl
-    vault operator unseal I4CM5fuYdwdd85bPCCyzulXkXa3S+GjXiavt4r/CV1w=
-    export VAULT_TOKEN=s.kKECwHyEZEaaM6xoq78f05Vl
+    vault operator unseal XXX
+    export VAULT_TOKEN=XXX
     vault write secret/toto password=titi
     vault read secret/toto
 exit
 
 kubectl exec -it $pod -- cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt > work/ca.crt
 openssl x509 -in work/ca.crt -text
-curl --cacert work/ca.crt -v https://myvault.mycompany.io/v1/sys/seal-status
+curl --cacert work/ca.crt -s -v https://myvault.mycompany.io/v1/sys/seal-status | jq
 
 export VAULT_CACERT=work/ca.crt
 vault status -address=https://myvault.mycompany.io
@@ -42,3 +40,7 @@ kubectl logs $controller -n ingress-nginx
 ./remove-all.sh
 
 ```
+
+Unseal Key 1: Ro69IeXEW+5rzYr2oKTLXng1Y/DNuya4XyLE2x/m5SM=
+
+Initial Root Token: s.1xtK9Wy0RDe6WlAEoGQOJz5u
