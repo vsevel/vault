@@ -25,21 +25,30 @@ kubectl exec -it $(kubectl get pod -l app=vault -o custom-columns=:metadata.name
     export VAULT_SKIP_VERIFY=true
     vault status
     vault operator init -key-shares=1 -key-threshold=1
-    vault operator unseal XXX
-    export VAULT_TOKEN=XXX
+    key=...
+    token=...
+    vault operator unseal $key
+    export VAULT_TOKEN=$token
     vault write secret/toto password=titi
     vault read secret/toto
 exit
 
 kubectl scale --replicas=2 deployment vault
 
-curl --silent -k https://myvault.mycompany.io/v1/sys/health | jq
-curl --silent -k --header "X-Vault-Token: $token" https://myvault.mycompany.io/v1/secret/toto |jq '.data'
+# unseal new standby vault pod and read value
+    key=...
+    token=...
+    vault operator unseal $key
+    export VAULT_TOKEN=$token
+    vault read secret/toto
+exit
+
+curl -s -k https://myvault.mycompany.io/v1/sys/health | jq
+curl -s -k --header "X-Vault-Token: $token" https://myvault.mycompany.io/v1/secret/toto | jq  '.data' 
 
 ./remove-all.sh
 
 ```
 
-Unseal Key 1: QVJMzFzFTePpfI+q87NnqIGl9vzZyFK+D+PkvUbTZHE=
-
-Initial Root Token: token=s.6o2J4pVqBd2oMjcsBPIkpFaM
+key=H8h1ZdA3kAz82t6nwxLK2kdFppu0Go2fYdvfXdQc+BI=
+token=s.AQrPX9GlBwGckzR1Kd5VXO4n
