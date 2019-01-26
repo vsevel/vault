@@ -5,7 +5,7 @@ metadata:
     app: vault
   name: vault
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: vault

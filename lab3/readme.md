@@ -33,13 +33,13 @@ exit
 
 kubectl scale --replicas=2 deployment vault
 
-curl -k https://myvault.mycompany.io/v1/sys/seal-status
-curl -k --header "X-Vault-Token: XXX" https://myvault.mycompany.io/v1/secret/toto
+curl --silent -k https://myvault.mycompany.io/v1/sys/health | jq
+curl --silent -k --header "X-Vault-Token: $token" https://myvault.mycompany.io/v1/secret/toto |jq '.data'
 
 ./remove-all.sh
 
 ```
 
-Unseal Key 1: YM9ccS4IiQ4OvQAzTzqmsLsrx+XHaBB8MSIDTIRCnGA=
+Unseal Key 1: QVJMzFzFTePpfI+q87NnqIGl9vzZyFK+D+PkvUbTZHE=
 
-Initial Root Token: s.6gBi6dKjsUpoAnMTbU0Sx8T6
+Initial Root Token: token=s.6o2J4pVqBd2oMjcsBPIkpFaM
