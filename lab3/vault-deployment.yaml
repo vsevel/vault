@@ -27,11 +27,36 @@ spec:
         env:
         - name: SKIP_SETCAP
           value: 'true'
-        - name: VAULT_LOCAL_CONFIG
+        # - name: VAULT_LOCAL_CONFIG
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: vault-config
+        #       key: vault-config.json
+        - name: NODE
           valueFrom:
-            configMapKeyRef:
-              name: vault-config
-              key: vault-config.json
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: VAULT_LOCAL_CONFIG
+          value: |
+            {
+              "storage": {
+                "consul": {
+                  "address": "$(NODE):8500",
+                  "path": "vault"
+                }
+              }
+              "default_lease_ttl": "168h",
+              "max_lease_ttl": "720h" ,
+              "disable_mlock": true,
+              "listener": {
+                "tcp" : {
+                  "address" : "0.0.0.0:8200",
+                  "tls_cert_file": "/etc/tls/tls.crt",
+                  "tls_key_file": "/etc/tls/tls.key"
+                }
+              }
+            }
         volumeMounts:
         - name: vault-file-backend
           mountPath: /vault/file
