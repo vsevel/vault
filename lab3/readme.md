@@ -38,6 +38,7 @@ kubectl scale --replicas=2 deployment vault
 # unseal new standby vault pod and read value
     key=...
     token=...
+    export VAULT_SKIP_VERIFY=true
     vault operator unseal $key
     export VAULT_TOKEN=$token
     vault read secret/toto
@@ -50,5 +51,5 @@ curl -s -k --header "X-Vault-Token: $token" https://myvault.mycompany.io/v1/secr
 
 ```
 
-key=H8h1ZdA3kAz82t6nwxLK2kdFppu0Go2fYdvfXdQc+BI=
-token=s.AQrPX9GlBwGckzR1Kd5VXO4n
+key=9xxrMfkh+Yky8oJETZIJkkQrXs2hsJKutIEEnpxuBHk=
+token=s.3qJgLocJNjX5Qc7m8QJer1pZ
