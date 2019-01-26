@@ -18,6 +18,9 @@ brew install cfssl
 # vault
 brew install vault
 
+# vault
+brew install jq
+
 # helm
 brew install kubernetes-helm
 # see https://docs.helm.sh/using_helm/

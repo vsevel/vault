@@ -5,7 +5,7 @@ metadata:
     app: vault
   name: vault
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: vault
@@ -27,36 +27,45 @@ spec:
         env:
         - name: SKIP_SETCAP
           value: 'true'
-        # - name: VAULT_LOCAL_CONFIG
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: vault-config
-        #       key: vault-config.json
-        - name: NODE
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: NODE_NAME
           valueFrom:
             fieldRef:
               apiVersion: v1
               fieldPath: spec.nodeName
         - name: VAULT_LOCAL_CONFIG
-          value: |
-            {
-              "storage": {
-                "consul": {
-                  "address": "$(NODE):8500",
-                  "path": "vault"
-                }
-              }
-              "default_lease_ttl": "168h",
-              "max_lease_ttl": "720h" ,
-              "disable_mlock": true,
-              "listener": {
-                "tcp" : {
-                  "address" : "0.0.0.0:8200",
-                  "tls_cert_file": "/etc/tls/tls.crt",
-                  "tls_key_file": "/etc/tls/tls.key"
-                }
-              }
-            }
+          valueFrom:
+            configMapKeyRef:
+              name: vault-config
+              key: vault-config.json
+        - name: VAULT_CLUSTER_ADDR
+          value: https://$(POD_IP):8201
+        - name: VAULT_API_ADDR
+          value: https://$(POD_IP):8200
+        # - name: VAULT_LOCAL_CONFIG
+        # {
+        # 	"storage":
+        # 	{ "consul":
+        # 		{ "address": "$(NODE_NAME):8500",
+        # 		  "path": "vault"
+        # 		}
+        # 	},
+        # 	"default_lease_ttl": "168h",
+        # 	"max_lease_ttl": "720h" ,
+        # 	"disable_mlock": true,
+        # 	"listener":
+        # 	{ "tcp":
+        # 		{ "address" : "0.0.0.0:8200",
+        # 			"cluster_address": "0.0.0.0:8201",
+        # 		  "tls_cert_file": "/etc/tls/tls.crt",
+        # 		  "tls_key_file": "/etc/tls/tls.key"
+        # 		}
+        # 	}
+        # }
         volumeMounts:
         - name: vault-file-backend
           mountPath: /vault/file

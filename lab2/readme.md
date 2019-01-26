@@ -14,18 +14,18 @@ add "127.0.0.1       myvault.mycompany.io" to /etc/hosts
 
 pod=$(kubectl get pods --output=jsonpath={.items..metadata.name})
 kubectl exec -it $pod sh
-export VAULT_CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-vault status -address=https://vault.vault.svc.cluster.local:8200
-vault status -address=https://vault.vault:8200
-vault status -address=https://vault:8200
+    export VAULT_CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    vault status -address=https://vault.vault.svc.cluster.local:8200
+    vault status -address=https://vault.vault:8200
+    vault status -address=https://vault:8200
 
-vault operator init -key-shares=1 -key-threshold=1
-    Unseal Key 1: I4CM5fuYdwdd85bPCCyzulXkXa3S+GjXiavt4r/CV1w=
-    Initial Root Token: s.kKECwHyEZEaaM6xoq78f05Vl
-vault operator unseal I4CM5fuYdwdd85bPCCyzulXkXa3S+GjXiavt4r/CV1w=
-export VAULT_TOKEN=s.kKECwHyEZEaaM6xoq78f05Vl
-vault write secret/toto password=titi
-vault read secret/toto
+    vault operator init -key-shares=1 -key-threshold=1
+        Unseal Key 1: I4CM5fuYdwdd85bPCCyzulXkXa3S+GjXiavt4r/CV1w=
+        Initial Root Token: s.kKECwHyEZEaaM6xoq78f05Vl
+    vault operator unseal I4CM5fuYdwdd85bPCCyzulXkXa3S+GjXiavt4r/CV1w=
+    export VAULT_TOKEN=s.kKECwHyEZEaaM6xoq78f05Vl
+    vault write secret/toto password=titi
+    vault read secret/toto
 exit
 
 kubectl exec -it $pod -- cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt > work/ca.crt
