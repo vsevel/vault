@@ -37,10 +37,6 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: spec.nodeName
-        # - name: VAULT_CLUSTER_ADDR
-        #   value: https://$(POD_IP):8201
-        # - name: VAULT_API_ADDR
-        #   value: https://$(POD_IP):8200
         - name: VAULT_LOCAL_CONFIG
           value: |
             { 
