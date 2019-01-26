@@ -37,10 +37,10 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: spec.nodeName
-        - name: VAULT_CLUSTER_ADDR
-          value: https://$(POD_IP):8201
-        - name: VAULT_API_ADDR
-          value: https://$(POD_IP):8200
+        # - name: VAULT_CLUSTER_ADDR
+        #   value: https://$(POD_IP):8201
+        # - name: VAULT_API_ADDR
+        #   value: https://$(POD_IP):8200
         - name: VAULT_LOCAL_CONFIG
           value: |
             { 
@@ -50,6 +50,8 @@ spec:
                   "path": "vault"
                 }
               },
+              "api_addr": "https://$(POD_IP):8200",
+              "cluster_addr ": "https://$(POD_IP):8201",
               "default_lease_ttl": "168h",
               "max_lease_ttl": "720h" ,
               "disable_mlock": true,

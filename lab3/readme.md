@@ -51,5 +51,5 @@ curl -s -k --header "X-Vault-Token: $token" https://myvault.mycompany.io/v1/secr
 
 ```
 
-key=9xxrMfkh+Yky8oJETZIJkkQrXs2hsJKutIEEnpxuBHk=
-token=s.3qJgLocJNjX5Qc7m8QJer1pZ
+key=FeImsBbSHTWmW0QE43SMipkCJfyKZiH6O2s6KPDu9/A=
+token=s.49jcNoiBsoXOPgOE0pLtIoli
