@@ -1,51 +1,42 @@
-# Vault lab3
+# Vault lab4
 ```
 
 kubectl config set-context $(kubectl config current-context) --namespace=vault
 
-git clone https://github.com/hashicorp/consul-helm.git
-consul_helm_path=`pwd`/consul-helm/
-git checkout v0.5.0
-
 ./create-all.sh
-kubectl get pods --watch
 
-kubectl exec -it consul-server-0 sh
-    consul members
-exit
+kubectl create -f role.yaml
 
-kubectl exec -it $(kubectl get pod -l component=client -o custom-columns=:metadata.name) sh
-    consul members
-    curl http://docker-for-desktop:8500/v1/status/leader
-exit
+docker pull cfmanteiga/alpine-bash-curl-jq
+kubectl create -f busybox.yaml
+kubectl exec -it busybox sh
 
-kubectl port-forward consul-server-0 8500:8500
+curl -s --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+    https://kubernetes.default.svc/api/v1/namespaces/vault/pods?labelSelector=app%3Dvault \
+    | jq '.items[] | {ip: .status.podIP, name: .metadata.name}'
 
-kubectl exec -it $(kubectl get pod -l app=vault -o custom-columns=:metadata.name) sh
-    export VAULT_SKIP_VERIFY=true
-    vault status
-    vault operator init -key-shares=1 -key-threshold=1
-    key=...
-    token=...
-    vault operator unseal $key
-    export VAULT_TOKEN=$token
-    vault write secret/toto password=titi
-    vault read secret/toto
-exit
+kubectl get pod -l app=vault -o=custom-columns=POD_IP:.status.podIP,NAME:.metadata.name
 
-kubectl scale --replicas=2 deployment vault
+curl -s -k https://10-1-0-216.vault.pod.cluster.local:8200/v1/sys/seal-status | jq
 
-# unseal new standby vault pod and read value
-    key=...
-    token=...
-    export VAULT_SKIP_VERIFY=true
-    vault operator unseal $key
-    export VAULT_TOKEN=$token
-    vault read secret/toto
-exit
+curl -s -k --request PUT -d '{"secret_shares": 1,"secret_threshold": 1}' https://10-1-0-216.vault.pod.cluster.local:8200/v1/sys/init | jq
 
-curl -s -k https://myvault.mycompany.io/v1/sys/health | jq
-curl -s -k --header "X-Vault-Token: $token" https://myvault.mycompany.io/v1/secret/toto | jq  '.data' 
+{
+  "keys": [
+    "142345e74aa55a602523f38167469e58c9f61be55825608c6c9a49a53f39989c"
+  ],
+  "keys_base64": [
+    "FCNF50qlWmAlI/OBZ0aeWMn2G+VYJWCMbJpJpT85mJw="
+  ],
+  "root_token": "s.1SpG2yCxDxTCoP2IrouVaV8R"
+}
+
+curl -s -k --request PUT -d '{"key":"FCNF50qlWmAlI/OBZ0aeWMn2G+VYJWCMbJpJpT85mJw="}' https://10-1-0-216.vault.pod.cluster.local:8200/v1/sys/unseal | jq
+
+
+
+
+
 
 ./remove-all.sh
 
