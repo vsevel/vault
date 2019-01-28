@@ -5,7 +5,8 @@ kubectl config set-context $(kubectl config current-context) --namespace=vault
 
 ./create-all.sh
 
-kubectl create -f role.yaml
+kubectl create -f role-pod-reader.yaml
+kubectl create -f cluster-role-auth-delegator.yaml
 
 docker pull cfmanteiga/alpine-bash-curl-jq
 kubectl create -f busybox.yaml
@@ -35,12 +36,25 @@ curl -s -k --request PUT -d '{"key":"FCNF50qlWmAlI/OBZ0aeWMn2G+VYJWCMbJpJpT85mJw
 
 
 
+jwt=$(kubectl exec vault-85f8bb65df-7499s -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+kubectl exec vault-85f8bb65df-7499s -- cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt >> work/ca.crt
+export VAULT_TOKEN=s.1SpG2yCxDxTCoP2IrouVaV8R
+export VAULT_SKIP_VERIFY=true
+export VAULT_ADDR=https://myvault.mycompany.io
+vault auth enable kubernetes
+vault write auth/kubernetes/config token_reviewer_jwt=$jwt kubernetes_host=https://kubernetes.default.svc kubernetes_ca_cert=@work/ca.crt
+vault read auth/kubernetes/config
+vault policy write spring-native-example spring-native-example.hcl
+vault write auth/kubernetes/role/spring-native-example bound_service_account_names='*' bound_service_account_namespaces='*' policies=spring-native-example ttl=2h
+vault write secret/spring-native-example password=pwd
+vault read secret/spring-native-example
 
+jwt=$(kubectl exec busybox -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+vault write auth/kubernetes/login role=spring-native-example jwt=$jwt
+export VAULT_TOKEN=s.13qaRWW9bTySrObShqTUVjnO
+vault read secret/spring-native-example
 
 
 ./remove-all.sh
 
 ```
-
-key=zXqoYiqm5jGbHBpUxURma0wKgNn7us+UrFy00ePDB2o=
-token=s.5foeL86gCMfsbJ4qFs3ZVp8O
