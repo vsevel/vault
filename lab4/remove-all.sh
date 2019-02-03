@@ -11,4 +11,5 @@ kubectl delete csr --all
 kubectl delete cm --all
 kubectl delete pvc --all
 
-
+kubectl delete pod busybox
+kubectl delete service vault

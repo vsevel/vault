@@ -11,3 +11,4 @@ kubectl apply -f vault-deployment.yaml
 kubectl apply -f vault-service.yaml
 kubectl apply -f vault-ingress.yaml
 
+kubectl create -f busybox.yaml
