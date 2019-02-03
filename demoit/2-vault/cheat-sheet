@@ -1,0 +1,38 @@
+helm install --name consul ../../../consul-helm/
+kubectl patch sts consul-server --type json -p='[{"op": "remove", "path": "/spec/template/spec/affinity"}]'
+kubectl delete pods --all
+
+kubectl exec -it consul-server-0 sh
+    consul members
+exit
+
+kubectl exec -it $(kubectl get pod -l component=client -o custom-columns=:metadata.name) sh
+    consul members
+    curl http://docker-for-desktop:8500/v1/status/leader
+exit
+
+kubectl apply -f vault-deployment.yaml
+
+kubectl port-forward consul-server-0 8500:8500
+
+kubectl exec -it $(kubectl get pod -l app=vault -o custom-columns=:metadata.name) sh
+    export VAULT_ADDR=http://127.0.0.1:8200
+    vault status
+    vault operator init -key-shares=1 -key-threshold=1
+    key=...
+    token=...
+    vault operator unseal $key
+    export VAULT_TOKEN=$token
+    vault write secret/foo password=bar
+    vault read secret/foo
+exit
+
+kubectl scale --replicas=2 deployment vault
+
+# unseal new standby vault pod and read value
+    key=...
+    token=...
+    vault operator unseal $key
+    export VAULT_TOKEN=$token
+    vault read secret/foo
+exit
