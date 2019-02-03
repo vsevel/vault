@@ -5,7 +5,7 @@ metadata:
     app: vault
   name: vault
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: vault
@@ -55,16 +55,27 @@ spec:
               { "tcp":
                 { "address" : "0.0.0.0:8200",
                   "cluster_address": "0.0.0.0:8201",
-                  "tls_disable": 1
+                  "tls_cert_file": "/etc/tls/tls.crt",
+                  "tls_key_file": "/etc/tls/tls.key"
                 }
               }
             }
+        volumeMounts:
+        - name: vault-cert
+          mountPath: /etc/tls
         livenessProbe:
           httpGet:
             path: 'v1/sys/health?standbyok=true&standbycode=200&sealedcode=200&uninitcode=200'
             port: 8200
+            scheme: HTTPS
         readinessProbe:
           httpGet:
             path: 'v1/sys/health?standbyok=true&standbycode=200&sealedcode=200&uninitcode=200'
             port: 8200
+            scheme: HTTPS
+      volumes:
+      - name: vault-cert
+        secret:
+          secretName: vault-tls
 
+          

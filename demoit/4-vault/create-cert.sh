@@ -26,6 +26,8 @@ EOF
 # Approve certificate
 kubectl certificate approve vault.vault
 
+sleep 5s
+
 # Download public key
 kubectl get csr vault.vault -o jsonpath='{.status.certificate}' | base64 --decode > vault.crt
 

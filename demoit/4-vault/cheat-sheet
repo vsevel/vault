@@ -1,0 +1,17 @@
+source create-cert.sh
+kubectl apply -f vault-deployment.yaml
+kubectl apply -f vault-ingress.yaml
+
+kubectl exec -it vault-XXX
+    export VAULT_SKIP_VERIFY=true
+    vault status
+    vault operator unseal XXX
+exit
+
+pod=vault-XXX
+kubectl exec -it $pod -- cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt > work/ca.crt
+
+curl -s --cacert work/ca.crt https://myvault.mycompany.io/v1/sys/health | jq
+
+token=s.6Ciud7ycjDkISVtUlepkVzb6
+curl -s --cacert work/ca.crt --header "X-Vault-Token: $token" https://myvault.mycompany.io/v1/secret/foo | jq  '.data'
