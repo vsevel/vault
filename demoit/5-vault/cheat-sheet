@@ -1,0 +1,5 @@
+curl -s -k https://myvault.mycompany.io/v1/sys/health | jq
+
+curl -s -k 'https://myvault.mycompany.io/v1/sys/health?standbyok=true&standbycode=200&sealedcode=200&uninitcode=200'
+
+kubectl apply -f vault-deployment.yaml
