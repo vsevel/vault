@@ -3,7 +3,7 @@ kubectl apply -f vaultadmin.yaml
 
 kubectl exec -it vaultadmin sh
     cacert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-    getpods=https://kubernetes.default.svc/api/v1/namespaces/vault/pods
-    curl -s --cacert $cacert $getpods?labelSelector=app%3Dvault | jq '.items[] | {ip: .status.podIP, name: .metadata.name}'
+    url=https://kubernetes.default.svc/api/v1/namespaces/vault/pods?labelSelector=app%3Dvault
+    curl -s --cacert $cacert $url | jq '.items[] | {ip: .status.podIP, name: .metadata.name}'
     curl -s -k https://10-1-0-216.vault.pod.cluster.local:8200/v1/sys/seal-status | jq
 exit
