@@ -16,7 +16,12 @@
 
 <h1>About myself</h1>
 
-<h2>...</h2>
+<h2>20+ Technical Architect</h2>
+<h2>Private Banking</h2>
+<h2>Product, Consulting, Training, Community Manager</h2>
+<h2>Development, Middleware, Cloud/Kubernetes/OpenShift</h2>
+<h2>https://github.com/vsevel/vault</h2>
+<h2>https://www.linkedin.com/in/vincent-sevel/</h2>
 
 ---
 
@@ -53,16 +58,39 @@
 <h2>Deployment</h2>
 <h2>StorageClass</h2>
 <h2>PV & PVC</h2>
+<h2>ConfigMap</h2>
+<h2>Imperative vs Declarative</h2>
 
 ---
 
 <h1>My first Vault: Can we do better?</h1>
 
-<h2>HA Consul Storage</h2>
+<h2>HA Storage</h2>
 <h2>Ingress vs NodePort</h2>
 <h2>TLS</h2>
 <h2>Liveness vs Readyness</h2>
 <h2>Kubernetes Authentication Delegation</h2>
+
+---
+
+<h1>Vault Storage Options</h1>
+
+<h2>19 options: Azure, Cassandra, ...</h2>
+<h2>(but only 8 for) HA Storage: </h2>
+<h2>**Consul**</h2>
+<h2>DynamoDB</h2>
+<h2>Etcd</h2>
+<h2>FoundationDB</h2>
+<h2>Google Cloud Spanner</h2>
+<h2>Google Cloud Storage</h2>
+<h2>MySQL</h2>
+<h2>Zookeeper</h2>
+
+---
+
+<h1>Helm: the Kubernetes Package Manager</h1>
+
+<img src="/images/helm.png" />
 
 ---
 
@@ -71,9 +99,9 @@
 <div class="split">
     <web-term path="2-vault"></web-term>
     <source-code folder="2-vault"
-        files="cheat-sheet vault-deployment.yaml"
-        start-lines="0;30"
-        end-lines="0;61">
+        files="cheat-sheet values.yaml vault-deployment.yaml"
+        start-lines="0;0;30"
+        end-lines="0;0;61">
     </source-code>
 </div>
 
@@ -90,6 +118,15 @@
 <h2>StatefulSet</h2>
 <h2>DaemonSet</h2>
 <h2>API Server</h2>
+<h2>Helm</h2>
+<h2>Opportunity: -retry-join 'provider=k8s label_selector="app=consul,component=server"'</h2>
+
+---
+
+<h1>Ingress</h1>
+
+<h2>Expose services outside the cluster</h2>
+<h2>Requires an ingress controller (eg Nginx)</h2>
 
 ---
 
@@ -121,6 +158,14 @@
 
 <h1>TLS</h1>
 
+<h2>Avoid man-in-the middle attack</h2>
+<h2>Confidentiality</h2>
+<h2>Inside and outside the cluster</h2>
+
+---
+
+<h1>TLS</h1>
+
 <div class="split">
     <web-term path="4-vault"></web-term>
     <source-code folder="4-vault"
@@ -138,6 +183,24 @@
 
 ---
 
+<h1>TLS: Recap</h1>
+
+<h2>CSR</h2>
+<h2>Required on all inter-pod communications</h2>
+<h2>Consul intra-cluster communications: gossip</h2>
+<h2>OpenShift: edge, passthrough and reencrypt</h2>
+<h2>Fast forward: Istio</h2>
+
+---
+
+<h1>Readiness & Liveness</h1>
+
+<h2>Readiness: traffic is not dispatched</h2>
+<h2>Liveness: pod gets restarted</h2>
+<h2>Critical piece of a resilient architecture</h2>
+
+---
+
 <h1>Readiness & Liveness</h1>
 
 <div class="split">
@@ -151,7 +214,21 @@
 
 ---
 
-<h1>Business Application</h1>
+<h1>Readiness & Liveness: Recap</h1>
+
+<h2>Readiness: pod not ready to accept traffic</h2>
+<h2>Liveness: pod needs to be restarted</h2>
+
+---
+
+<h1>Fecthing Secrets</h1>
+
+<h2>How do I fetch secrets?</h2>
+<h2>Integration with k8s: Auth delegation</h2>
+
+---
+
+<h1>Fecthing Secrets</h1>
 
 <div class="split">
     <web-term path="6-vault"></web-term>
@@ -161,6 +238,30 @@
         end-lines="0;0;0;0">
     </source-code>
 </div>
+
+---
+
+<h1>Fecthing Secrets</h1>
+
+<img src="/images/diag6.png" />
+
+---
+
+<h1>Fetching Secrets: Recap</h1>
+
+<h2>Mounted jwt & trusted certificate bundle</h2>
+<h2>Vault communicates with Token Review API</h2>
+<h2>Role = service accounts + policies</h2>
+
+---
+
+<h1>Vault Admin</h1>
+
+<h2>How do I know a vault needs to be unsealed?</h2>
+<h2>How do I unseal my vaults?</h2>
+<h2>How do I list vaults?</h2>
+<h2>How do I address a specific vault?</h2>
+<h2>Challenge: seal status is an in-memory state</h2>
 
 ---
 
@@ -177,73 +278,24 @@
 
 ---
 
-<h1>Hello, World!</h1>
+<h1>Vault Admin: Recap</h1>
 
-<h2>This is a simple slide</h2>
-<h2>With just <em>text</em></h2>
-
----
-
-<h1>Logos</h1>
-
-<div class="logos">
-    <img src="/images/kubernetes.png" />
-    <img src="/images/kubernetes.png" />
-</div>
+<h2>API Server</h2>
+<h2>DNS A record “pod-ip-address.my-namespace.pod.cluster.local“</h2>
+<h2>Should Vault be a StatefulSet?</h2>
+<h2>Opportunity: Auto Unseal with HSM PKCS11, AWS KMS, ...</h2>
 
 ---
 
-<h1>Snapshot</h1>
+<h1>Conclusion</h1>
 
-<img src="/images/bazel.png" />
-
----
-
-<h1>Terminal</h1>
-
-<div class="split">
-    <web-term path="folder"></web-term>
-</div>
+<h2>Kubernetes: An integrator's dream</h2>
+<h2>The toolbox is huge, and continously improving</h2>
+<h2>Vault+Consul: A good fit for Kubernetes</h2>
+<h2>Some feature relevance quesions in a k8s world (dns server, ...)?</h2>
 
 ---
 
-<h1>Split view - Shell/Browser</h1>
+<h1>Questions</h1>
 
-<p>Type `python -m SimpleHTTPServer` in the shell window</p>
-
-<div class="split">
-    <web-term path="folder"></web-term>
-    <web-browser src="http://localhost:8000/"></web-browser>
-</div>
-
-<style>
-    p {
-        font-style: italic;
-        font-size: .5em;
-    }
-
-    .split {
-        height: calc(100% - 9em);
-    }
-</style>
-
----
-
-<h1>Code samples</h1>
-
-<div class="split">
-    <source-code folder="sources"
-        files="main.go pod.yaml"
-        start-lines="10;4,7"
-        end-lines="11;4,8">
-    </source-code>
-</div>
-
----
-
-<h1>Draw on slides</h1>
-
-<p>On the left border of the page there's a pen that can be used to draw on the slides. Type <em>&lt;ESC&gt;</em> to exit draw mode.</p>
-
-<img src="/images/bazel.png" />
-<script src="/js/draw.js"></script>
+<img src="/images/questions.png" />
