@@ -3,7 +3,8 @@ kubectl apply -f vault-pvc.yaml
 kubectl apply -f vault-deployment.yaml
 kubectl apply -f vault-service.yaml
 
-kubectl exec -it $(kubectl get pods --output=jsonpath={.items..metadata.name}) sh
+pod=$(kubectl get pods --output=jsonpath={.items..metadata.name})
+kubectl exec -it $pod sh
     cat /vault/config/local.json
     export VAULT_ADDR=http://127.0.0.1:8200
     vault status
@@ -18,3 +19,5 @@ exit
 
 port=$(kubectl get svc --output=jsonpath={.items..spec.ports..nodePort})
 curl -v http://localhost:$port/v1/sys/health
+
+

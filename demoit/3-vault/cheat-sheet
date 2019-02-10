@@ -14,7 +14,12 @@ kubectl apply -f vault-ingress.yaml
 ::1             localhost
 127.0.0.1       myvault.mycompany.io
 
-curl -s http://myvault.mycompany.io/v1/sys/health | jq
+url=http://myvault.mycompany.io/v1/sys/health
+curl -s $url | jq
 
-token=s.6Ciud7ycjDkISVtUlepkVzb6
-curl -s --header "X-Vault-Token: $token" http://myvault.mycompany.io/v1/secret/foo | jq  '.data' 
+token=XXX
+url=http://myvault.mycompany.io/v1/secret/foo
+curl -s --header "X-Vault-Token: $token" $url | jq  '.data' 
+
+
+

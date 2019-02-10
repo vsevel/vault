@@ -1,9 +1,12 @@
-curl -s -k https://myvault.mycompany.io/v1/sys/health | jq
+url=http://myvault.mycompany.io/v1/sys/health
+curl -s $url | jq
 
-curl -s -k 'https://myvault.mycompany.io/v1/sys/health?standbyok=true&standbycode=200&sealedcode=200&uninitcode=200'
+opt='standbyok=true&standbycode=200&sealedcode=200&uninitcode=200'
+curl -s -v http://myvault.mycompany.io/v1/sys/health?$opt | jq
 
 kubectl delete -f vault-deployment.yaml
 kubectl apply -f vault-deployment.yaml
 
 token=XXX
-curl -s -k --header "X-Vault-Token: $token" https://myvault.mycompany.io/v1/secret/foo | jq  '.data'
+url=http://myvault.mycompany.io/v1/secret/foo
+curl -s --header "X-Vault-Token: $token" $url | jq  '.data'
