@@ -3,13 +3,15 @@ kubectl apply -f cluster-role-auth-delegator.yaml
 
 pod=vault-XXX
 jwt=$(kubectl exec $pod -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-kubectl exec $pod -- cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt >> work/ca.crt
+kubectl exec $pod -- cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt > work/ca.crt
 export VAULT_ADDR=https://myvault.mycompany.io
 export VAULT_SKIP_VERIFY=true
 export VAULT_TOKEN=XXX
+
 vault auth enable kubernetes
 vault write auth/kubernetes/config token_reviewer_jwt=$jwt kubernetes_host=https://kubernetes.default.svc kubernetes_ca_cert=@work/ca.crt
 vault read auth/kubernetes/config
+
 vault policy write mypolicy mypolicy.hcl
 vault write auth/kubernetes/role/myapprole bound_service_account_names='*' bound_service_account_namespaces='vault' policies=mypolicy ttl=2h
 vault write secret/verysecret password=helloworld

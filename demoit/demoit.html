@@ -1,10 +1,39 @@
 
-<h1>Mon premier Vault</h1>
+<h1>Deploy Hashicorp Vault with Consul on Kubernetes</h1>
+
+<div class="logos">
+        <img src="/images/k8s_vault_consul.png" />
+</div>
+
+---
+
+<h1>Goals</h1>
+
+<h2>A (near) enterprise ready secret management solution</h2>
+<h2>Educational: How easy is it to integrate solutions into Kubernetes</h2>
+
+---
+
+<h1>About myself</h1>
+
+<h2>...</h2>
+
+---
+
+<h1>Why Vault, why Consul?</h1>
+
+<h2>Vault: De facto standard for secret management</h2>
+<h2>Consul: Works well with Vault as Storage backend</h2>
+<h2>Complete solution brings interesting integration challenges</h2>
+
+---
+
+<h1>My first Vault</h1>
 
 <div class="split">
     <web-term path="1-vault"></web-term>
     <source-code folder="1-vault"
-        files="vault-deployment.yaml vault-config.json vault-pvc.yaml vault-service.yaml cheat-sheet"
+        files="vault-deployment.yaml vault-pvc.yaml vault-config.json vault-service.yaml cheat-sheet"
         start-lines="0"
         end-lines="0">
     </source-code>
@@ -12,15 +41,32 @@
 
 ---
 
-<h1>Mon premier Vault</h1>
+<h1>My first Vault</h1>
 
-<h2>HA</h2>
-<h2>Ingress vs NodePort</h2>
-<h2>TLS</h2>
+<img src="/images/diag1.png" />
 
 ---
 
-<h1>HA avec Consul</h1>
+<h1>My first Vault: Recap</h1>
+
+<h2>NodePort Service</h2>
+<h2>Deployment</h2>
+<h2>StorageClass</h2>
+<h2>PV & PVC</h2>
+
+---
+
+<h1>My first Vault: Can we do better?</h1>
+
+<h2>HA Consul Storage</h2>
+<h2>Ingress vs NodePort</h2>
+<h2>TLS</h2>
+<h2>Liveness vs Readyness</h2>
+<h2>Kubernetes Authentication Delegation</h2>
+
+---
+
+<h1>HA Consul Storage</h1>
 
 <div class="split">
     <web-term path="2-vault"></web-term>
@@ -30,6 +76,20 @@
         end-lines="0;61">
     </source-code>
 </div>
+
+---
+
+<h1>HA Consul Storage</h1>
+
+<img src="/images/diag2.png" />
+
+---
+
+<h1>HA Consul Storage: Recap</h1>
+
+<h2>StatefulSet</h2>
+<h2>DaemonSet</h2>
+<h2>API Server</h2>
 
 ---
 
@@ -44,6 +104,18 @@
     </source-code>
 </div>
 
+---
+
+<h1>Ingress</h1>
+
+<img src="/images/diag3.png" />
+
+---
+
+<h1>Ingress: Recap</h1>
+
+<h2>Ingress Controller: nginx</h2>
+<h2>Ingress</h2>
 
 ---
 
@@ -57,6 +129,12 @@
         end-lines="0;0;0;59,65,70,75,79;7,18;223">
     </source-code>
 </div>
+
+---
+
+<h1>TLS</h1>
+
+<img src="/images/diag4.png" />
 
 ---
 
