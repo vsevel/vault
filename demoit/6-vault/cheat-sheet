@@ -1,67 +1,47 @@
 
 kubectl apply -f cluster-role-auth-delegator.yaml
 
-kubectl exec -it ...
-    export VAULT_TOKEN=XXX
-    export VAULT_ADDR=http://127.0.0.1:8200
-    cd /var/run/secrets/kubernetes.io/serviceaccount
+kubectl exec -it vault-XXX sh
+  export VAULT_TOKEN=XXX
+  export VAULT_ADDR=http://127.0.0.1:8200
+  cd /var/run/secrets/kubernetes.io/serviceaccount
 
-vault auth enable kubernetes
-vault write auth/kubernetes/config \
-    token_reviewer_jwt=$(cat token) \
-    kubernetes_host=https://kubernetes.default.svc \
-    kubernetes_ca_cert=@ca.crt
-vault read auth/kubernetes/config
+  vault auth enable kubernetes
 
-cat > mypolicy.hcl << EOF
-path "secret/foo" {
-  capabilities = ["read", "list"]
-}
-EOF
+  vault write auth/kubernetes/config \
+      token_reviewer_jwt=$(cat token) \
+      kubernetes_host=https://kubernetes.default.svc \
+      kubernetes_ca_cert=@ca.crt
 
+  vault read auth/kubernetes/config
 
--------------
+  cat <<EOF | vault policy write mypolicy -
+  path "secret/foo" {
+    capabilities = ["read", "list"]
+  }
+  EOF
 
-cat <<EOF | kubectl create -f -
-apiVersion: certificates.k8s.io/v1beta1
-kind: CertificateSigningRequest
-metadata:
-  name: vault.vault
-spec:
-  groups:
-  - system:authenticated
-  request: $(cat vault.csr | base64 | tr -d '\n')
-  usages:
-  - digital signature
-  - key encipherment
-  - server auth
-EOF
+  vault policy read mypolicy
 
-pod=vault-XXX
-jwt=$(kubectl exec $pod -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-kubectl exec $pod -- cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt > work/ca.crt
-export VAULT_ADDR=https://myvault.mycompany.io
-export VAULT_SKIP_VERIFY=true
-export VAULT_TOKEN=XXX
+  vault write auth/kubernetes/role/myapprole \
+      bound_service_account_names='*' \
+      bound_service_account_namespaces='vault' \
+      policies=mypolicy ttl=2h
 
-vault auth enable kubernetes
-vault write auth/kubernetes/config \
-    token_reviewer_jwt=$jwt \
-    kubernetes_host=https://kubernetes.default.svc \
-    kubernetes_ca_cert=@work/ca.crt
-vault read auth/kubernetes/config
-
-vault policy write mypolicy mypolicy.hcl
-vault write auth/kubernetes/role/myapprole \
-    bound_service_account_names='*' \
-    bound_service_account_namespaces='vault' \
-    policies=mypolicy ttl=2h
-vault write secret/verysecret password=helloworld
+  vault write secret/verysecret password=helloworld
+exit
 
 kubectl apply -f myapp.yaml
 
-myapp_jwt=$(kubectl exec myapp -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-vault write auth/kubernetes/login role=myapprole jwt=$myapp_jwt
+export VAULT_ADDR=http://myvault.mycompany.io
+
+jwt=$(kubectl exec myapp \
+  -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+  
+vault write auth/kubernetes/login role=myapprole jwt=$jwt
 export VAULT_TOKEN=XXX
 vault read secret/foo
 vault read secret/verysecret
+
+
+
