@@ -13,7 +13,7 @@ import org.springframework.vault.annotation.VaultPropertySource;
 @SpringBootApplication
 @VaultPropertySource("secret/foo")
 public class VaultDemoApplication {
-	
+
 	private Log log = LogFactory.getLog(VaultDemoApplication.class);
 
 	public static void main(String[] args) {
@@ -22,10 +22,12 @@ public class VaultDemoApplication {
 
     @Value("${password}")
     String password;
-    
+
     @PostConstruct
     private void postConstruct() {
-    	log.info("My password is: *** " + password + " ***");
+        log.info("My password is: *** " + password + " ***");
     }
-    
+
 }
+
+

@@ -25,7 +25,7 @@ EOF
 
   vault write auth/kubernetes/role/myapprole \
       bound_service_account_names='*' \
-      bound_service_account_namespaces='vault' \
+      bound_service_account_namespaces='default' \
       policies=mypolicy ttl=2h
 
 exit

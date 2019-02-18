@@ -1,19 +1,5 @@
 
-kubectl apply -f vault-demo.yaml
+kubectl apply -f vault-demo.yaml -n default
 
------------------------------
-
-# kubectl apply -f myapp.yaml
-
-# export VAULT_ADDR=http://myvault.mycompany.io
-
-# jwt=$(kubectl exec myapp \
-#   -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-
-# vault write auth/kubernetes/login role=myapprole jwt=$jwt
-# export VAULT_TOKEN=XXX
-# vault read secret/foo
-# vault read secret/verysecret
-
-
-
+curl http://vault-demo.mycompany.io/health
+curl http://vault-demo.mycompany.io/secret
