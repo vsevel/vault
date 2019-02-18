@@ -13,5 +13,5 @@ kubectl exec -it $pod -- cat /var/run/secrets/kubernetes.io/serviceaccount/ca.cr
 
 curl -s --cacert work/ca.crt https://myvault.mycompany.io/v1/sys/health | jq
 
-token=s.6Ciud7ycjDkISVtUlepkVzb6
+token=XXX
 curl -s --cacert work/ca.crt --header "X-Vault-Token: $token" https://myvault.mycompany.io/v1/secret/foo | jq  '.data'

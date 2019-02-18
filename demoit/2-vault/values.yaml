@@ -83,15 +83,15 @@ server:
   # Affinity Settings
   # Commenting out or setting as empty the affinity variable, will allow
   # deployment to single node services such as Minikube
-  affinity: |
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              app: {{ template "consul.name" . }}
-              release: "{{ .Release.Name }}"
-              component: server
-          topologyKey: kubernetes.io/hostname
+  # affinity: |
+  #   podAntiAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       - labelSelector:
+  #           matchLabels:
+  #             app: {{ template "consul.name" . }}
+  #             release: "{{ .Release.Name }}"
+  #             component: server
+  #         topologyKey: kubernetes.io/hostname
 
 # Client, when enabled, configures Consul clients to run on every node
 # within the Kube cluster. The current deployment model follows a traditional

@@ -1,3 +1,8 @@
+kubectl delete pod vault-XXX
+
+url=http://myvault.mycompany.io/v1/secret/foo
+curl -s --header "X-Vault-Token: $token" $url | jq  '.data' 
+
 url=http://myvault.mycompany.io/v1/sys/health
 curl -s $url | jq
 
@@ -6,6 +11,8 @@ curl -s -v http://myvault.mycompany.io/v1/sys/health?$opt | jq
 
 kubectl delete -f vault-deployment.yaml
 kubectl apply -f vault-deployment.yaml
+
+unseal first pod
 
 token=XXX
 url=http://myvault.mycompany.io/v1/secret/foo
