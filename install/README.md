@@ -62,8 +62,8 @@ https://golang.org/doc/install#macos
 https://github.com/dgageot/demoit#install
 
 # fetch consul helm chart
-git clone https://github.com/helm/charts/tree/master/stable/consul
-=> comment affinity from line 86 to 94
+git clone https://github.com/hashicorp/consul-helm
+=> comment affinity from line 86 to 94 in values.yaml
 
 
 ```
