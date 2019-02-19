@@ -1,1 +1,1 @@
-$HOME/go/bin/demoit .
+./demoit.sh
