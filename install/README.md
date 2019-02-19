@@ -63,7 +63,19 @@ https://github.com/dgageot/demoit#install
 
 # fetch consul helm chart
 git clone https://github.com/hashicorp/consul-helm
-=> comment affinity from line 86 to 94 in values.yaml
+=> comment affinity to be able to deploy all servers on 1 node:
+  # affinity: |
+  #   podAntiAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       - labelSelector:
+  #           matchLabels:
+  #             app: {{ template "consul.name" . }}
+  #             release: "{{ .Release.Name }}"
+  #             component: server
+  #         topologyKey: kubernetes.io/hostname
 
+# to remove line numbers in demoit, replace the following in code.go of demoit:
+	// formatter := html.New(html.Standalone(), html.WithLineNumbers(), html.HighlightLines(lines), html.WithClasses())
+	formatter := html.New(html.Standalone(), html.HighlightLines(lines), html.WithClasses())
 
 ```
