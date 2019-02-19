@@ -57,7 +57,7 @@ https://kubernetes.github.io/ingress-nginx/deploy/#minikube
 https://golang.org/doc/install#macos
 https://github.com/dgageot/demoit#install
 
-# fetch consul helm chart
+# fetch consul helm chart (you should have the consul-helm repo and the vault repo at the same level)
 git clone https://github.com/hashicorp/consul-helm
 => comment affinity to be able to deploy all servers on 1 node:
   # affinity: |
