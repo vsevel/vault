@@ -139,3 +139,9 @@ em {
     font-style: normal;
     color: rgb(0,122,204);
 }
+
+.logos2 {
+    display: flex;
+    margin: 30px auto 0 auto;
+    width: 100%;
+}

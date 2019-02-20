@@ -3,16 +3,7 @@ kubectl delete service vault
 kubectl apply -f vault-service.yaml
 kubectl apply -f vault-ingress.yaml
 
-##
-# Host Database
-#
-# localhost is used to configure the loopback interface
-# when the system is booting.  Do not change this entry.
-##
-127.0.0.1       localhost
-255.255.255.255 broadcasthost
-::1             localhost
-127.0.0.1       myvault.mycompany.io
+add '127.0.0.1       myvault.mycompany.io' to /etc/hosts
 
 url=http://myvault.mycompany.io/v1/sys/health
 curl -s $url | jq
