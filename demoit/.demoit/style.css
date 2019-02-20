@@ -47,8 +47,8 @@ h2, h3 {
 
 img {
     margin: 0 auto;
-    max-height: 70%;
-    max-width: 70%;
+    max-height: 77%;
+    max-width: 77%;
 }
 
 .logos {
@@ -148,5 +148,5 @@ em {
 
 .logos3 {
     display: flex;
-    max-height: 100%;
+    height: 100%;
 }
