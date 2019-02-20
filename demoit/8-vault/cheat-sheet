@@ -3,5 +3,4 @@ kubectl apply -f vault-demo.yaml -n default
 
 add '127.0.0.1       vault-demo.mycompany.io' to /etc/hosts
 
-curl http://vault-demo.mycompany.io/health
 curl http://vault-demo.mycompany.io/secret
