@@ -145,3 +145,8 @@ em {
     margin: 30px auto 0 auto;
     width: 100%;
 }
+
+.logos3 {
+    display: flex;
+    max-height: 100%;
+}
