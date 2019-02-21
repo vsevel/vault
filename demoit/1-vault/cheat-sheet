@@ -4,7 +4,6 @@ kubectl apply -f vault-service.yaml
 
 pod=$(kubectl get pods --output=jsonpath={.items..metadata.name})
 kubectl exec -it $pod sh
-    cat /vault/config/local.json
     export VAULT_ADDR=http://127.0.0.1:8200
     vault status
     vault operator init -key-shares=1 -key-threshold=1
