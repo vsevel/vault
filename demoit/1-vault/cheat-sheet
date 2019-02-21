@@ -16,6 +16,6 @@ kubectl exec -it $pod sh
 exit
 
 port=$(kubectl get svc --output=jsonpath={.items..spec.ports..nodePort})
-curl -v http://localhost:$port/v1/sys/health
+curl -s http://localhost:$port/v1/sys/health | jq
 
 
