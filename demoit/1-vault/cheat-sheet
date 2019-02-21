@@ -8,10 +8,10 @@ kubectl exec -it $pod sh
     export VAULT_ADDR=http://127.0.0.1:8200
     vault status
     vault operator init -key-shares=1 -key-threshold=1
-        Unseal Key 1: tJJnfemPL59ICAEGSc7D2jdR4TkKbpxylkWn7aGZzD4=
-        Initial Root Token: s.1kuUziwDmvqm8LBuTv2JDhgu
-    vault operator unseal tJJnfemPL59ICAEGSc7D2jdR4TkKbpxylkWn7aGZzD4=
-    export VAULT_TOKEN=s.1kuUziwDmvqm8LBuTv2JDhgu
+        => Unseal Key 1: ...
+        => Initial Root Token: ...
+    vault operator unseal XXX
+    export VAULT_TOKEN=XXX
     vault write secret/foo password=bar
     vault read secret/foo
 exit

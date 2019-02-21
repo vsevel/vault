@@ -1,10 +1,9 @@
 kubectl delete pod vault-XXX
 
-url=http://myvault.mycompany.io/v1/secret/foo
-curl -s --header "X-Vault-Token: $token" $url | jq  '.data' 
+curl -s --header "X-Vault-Token: $token" \
+    http://myvault.mycompany.io/v1/secret/foo | jq
 
-url=http://myvault.mycompany.io/v1/sys/health
-curl -s $url | jq
+curl -s http://myvault.mycompany.io/v1/sys/health | jq
 
 opt='standbyok=true&standbycode=200&sealedcode=200&uninitcode=200'
 curl -s -v http://myvault.mycompany.io/v1/sys/health?$opt | jq
@@ -15,5 +14,6 @@ kubectl apply -f vault-deployment.yaml
 unseal first pod
 
 token=XXX
-url=http://myvault.mycompany.io/v1/secret/foo
-curl -s --header "X-Vault-Token: $token" $url | jq  '.data'
+
+curl -s --header "X-Vault-Token: $token" \
+    http://myvault.mycompany.io/v1/secret/foo | jq
