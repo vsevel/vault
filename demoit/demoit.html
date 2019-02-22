@@ -1,5 +1,5 @@
 
-<h1>Deploy Hashicorp Vault with Consul on Kubernetes</h1>
+<h1>Deploy Vault with Consul on Kubernetes</h1>
 
 <!-- <img class="logos2" src="/images/k8s_vault_consul.png" /> -->
 <img src="/images/k8s_vault_consul.png" class="logos3"/> 
@@ -62,8 +62,7 @@
 
 <h2>NodePort Service</h2>
 <h2>Deployment</h2>
-<h2>StorageClass</h2>
-<h2>PV & PVC</h2>
+<h2>PV, PVC, StorageClass</h2>
 <h2>ConfigMap</h2>
 <h2>Imperative vs Declarative</h2>
 
@@ -107,9 +106,9 @@
 <div class="split">
     <web-term path="2-vault"></web-term>
     <source-code folder="2-vault"
-        files="cheat-sheet values.yaml vault-deployment.yaml"
-        start-lines="0;0;30"
-        end-lines="0;0;61">
+        files="cheat-sheet statefulset.yaml values.yaml vault-deployment.yaml"
+        start-lines="0;16;35;30"
+        end-lines="0;16;35;61">
     </source-code>
 </div>
 
