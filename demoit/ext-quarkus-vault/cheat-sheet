@@ -1,13 +1,13 @@
 start postgres:
 
-docker run --rm --name mypostgres -it -p 5432:5432 -e POSTGRES_PASSWORD=bar postgres
+kubectl apply -f postgres.yaml -n default
 
 build app:
 
 ./mvnw clean package
 docker build -f src/main/docker/Dockerfile.jvm -t quarkusapp .
 
-deploy in default ns:
+deploy:
 
 kubectl apply -f quarkusapp.yaml -n default
 kubectl logs quarkusapp -n default --follow
