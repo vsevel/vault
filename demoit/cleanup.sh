@@ -16,4 +16,4 @@ kubectl delete ns vault
 kubectl delete ingress --all -n default
 kubectl delete svc --all -n default
 kubectl delete deployment --all -n default
-
+kubectl delete pod --all -n default
