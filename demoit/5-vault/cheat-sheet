@@ -1,24 +1,36 @@
-kubectl delete pod vault-XXX
 
-token=...
+kubectl apply -f cluster-role-auth-delegator.yaml
 
-curl -s --header "X-Vault-Token: $token" \
-    http://myvault.mycompany.io/v1/secret/foo | jq
+kubectl exec -it vault-XXX sh
+  export VAULT_TOKEN=XXX
+  export VAULT_ADDR=http://127.0.0.1:8200
+  cd /var/run/secrets/kubernetes.io/serviceaccount
 
-curl -s http://myvault.mycompany.io/v1/sys/health | jq
+  vault auth enable kubernetes
 
-opt='standbyok=true&standbycode=200&sealedcode=200&uninitcode=200'
-curl -s -v http://myvault.mycompany.io/v1/sys/health?$opt | jq
+  vault write auth/kubernetes/config \
+      token_reviewer_jwt=$(cat token) \
+      kubernetes_host=https://kubernetes.default.svc \
+      kubernetes_ca_cert=@ca.crt
 
-kubectl delete -f vault-deployment.yaml
-kubectl apply -f vault-deployment.yaml
+  vault read auth/kubernetes/config
 
-unseal first pod
+---
 
-token=XXX
+cat <<EOF | vault policy write mypolicy -
+path "secret/foo" {
+  capabilities = ["read", "list"]
+}
+EOF
 
-curl -s --header "X-Vault-Token: $token" \
-    http://myvault.mycompany.io/v1/secret/foo | jq
+  vault policy read mypolicy
+
+  vault write auth/kubernetes/role/myapprole \
+      bound_service_account_names='*' \
+      bound_service_account_namespaces='default' \
+      policies=mypolicy ttl=2h
+
+exit
 
 
-    
+

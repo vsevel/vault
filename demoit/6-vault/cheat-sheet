@@ -1,36 +1,6 @@
 
-kubectl apply -f cluster-role-auth-delegator.yaml
+kubectl apply -f vault-demo.yaml -n default
 
-kubectl exec -it vault-XXX sh
-  export VAULT_TOKEN=XXX
-  export VAULT_ADDR=http://127.0.0.1:8200
-  cd /var/run/secrets/kubernetes.io/serviceaccount
+add '127.0.0.1       vault-demo.mycompany.io' to /etc/hosts
 
-  vault auth enable kubernetes
-
-  vault write auth/kubernetes/config \
-      token_reviewer_jwt=$(cat token) \
-      kubernetes_host=https://kubernetes.default.svc \
-      kubernetes_ca_cert=@ca.crt
-
-  vault read auth/kubernetes/config
-
----
-
-cat <<EOF | vault policy write mypolicy -
-path "secret/foo" {
-  capabilities = ["read", "list"]
-}
-EOF
-
-  vault policy read mypolicy
-
-  vault write auth/kubernetes/role/myapprole \
-      bound_service_account_names='*' \
-      bound_service_account_namespaces='default' \
-      policies=mypolicy ttl=2h
-
-exit
-
-
-
+curl http://vault-demo.mycompany.io/secret

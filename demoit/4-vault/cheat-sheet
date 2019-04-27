@@ -1,0 +1,24 @@
+kubectl delete pod vault-XXX
+
+token=...
+
+curl -s --header "X-Vault-Token: $token" \
+    http://myvault.mycompany.io/v1/secret/foo | jq
+
+curl -s http://myvault.mycompany.io/v1/sys/health | jq
+
+opt='standbyok=true&standbycode=200&sealedcode=200&uninitcode=200'
+curl -s -v http://myvault.mycompany.io/v1/sys/health?$opt | jq
+
+kubectl delete -f vault-deployment.yaml
+kubectl apply -f vault-deployment.yaml
+
+unseal first pod
+
+token=XXX
+
+curl -s --header "X-Vault-Token: $token" \
+    http://myvault.mycompany.io/v1/secret/foo | jq
+
+
+    
