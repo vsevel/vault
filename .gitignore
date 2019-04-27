@@ -1,2 +1,7 @@
 *.code-workspace
 work
+ObjectStore
+target
+*.iml
+.idea
+.mvn
