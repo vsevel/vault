@@ -1,13 +1,8 @@
 helm install --name consul ../../../consul-helm/
 
-kubectl exec -it consul-server-0 sh
-    consul members
-exit
+kubectl exec -it consul-server-0 consul members
 
-kubectl exec -it consul-XXX sh
-    consul members
-    curl http://docker-for-desktop:8500/v1/status/leader
-exit
+kubectl exec -it consul-server-0 curl http://docker-for-desktop:8500/v1/status/leader
 
 kubectl apply -f vault-deployment.yaml
 
@@ -19,6 +14,7 @@ kubectl exec -it XXX sh
     token=...
     vault operator unseal $key
     export VAULT_TOKEN=$token
+    vault secrets enable -path=secret kv
     vault write secret/foo password=bar
     vault read secret/foo
 exit
@@ -28,6 +24,7 @@ kubectl port-forward consul-server-0 8500:8500
 kubectl scale --replicas=2 deployment vault
 
 # unseal new standby vault pod and read value
+    export VAULT_ADDR=http://127.0.0.1:8200
     key=...
     token=...
     vault operator unseal $key

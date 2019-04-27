@@ -11,6 +11,7 @@ kubectl exec -it $pod sh
         => Initial Root Token: ...
     vault operator unseal XXX
     export VAULT_TOKEN=XXX
+    vault secrets enable -path=secret kv
     vault write secret/foo password=bar
     vault read secret/foo
 exit

@@ -1,5 +1,7 @@
 kubectl delete pod vault-XXX
 
+token=...
+
 curl -s --header "X-Vault-Token: $token" \
     http://myvault.mycompany.io/v1/secret/foo | jq
 
