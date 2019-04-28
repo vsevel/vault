@@ -4,7 +4,6 @@ ObjectStore
 target
 *.iml
 .idea
-.mvn
 .classpath
 .project
 .settings
