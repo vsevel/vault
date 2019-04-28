@@ -6,5 +6,5 @@ spec:
   containers:
   - image: quarkusapp
     imagePullPolicy: Never
-    name: getting-started
+    name: quarkusapp
   restartPolicy: Always

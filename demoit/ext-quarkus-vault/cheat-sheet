@@ -1,14 +1,10 @@
-start postgres:
+kubectl config set-context $(kubectl config current-context) --namespace=default
 
-kubectl apply -f postgres.yaml -n default
-
-build app:
+kubectl apply -f postgres.yaml
 
 ./mvnw clean package
 docker build -f src/main/docker/Dockerfile.jvm -t quarkusapp .
 
-deploy:
-
-kubectl apply -f quarkusapp.yaml -n default
-kubectl logs quarkusapp -n default --follow
+kubectl apply -f quarkusapp.yaml
+kubectl logs quarkusapp --follow
 
